@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "599534815846",
+    "firebase_url": "https://traemelopf-eb055-default-rtdb.firebaseio.com",
+    "project_id": "traemelopf-eb055",
+    "storage_bucket": "traemelopf-eb055.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599534815846:android:96997acfc91446ea70bba7",
+        "android_client_info": {
+          "package_name": "com.traemelopf.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPDz0IN7h21lb3Pxozm8FEdC7CCcKHfFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599534815846:android:06186d3c6889c74370bba7",
+        "android_client_info": {
+          "package_name": "com.traemelopf.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPDz0IN7h21lb3Pxozm8FEdC7CCcKHfFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599534815846:android:ccf9f8f24aa6ee2a70bba7",
+        "android_client_info": {
+          "package_name": "com.traemelopf.usuario"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPDz0IN7h21lb3Pxozm8FEdC7CCcKHfFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599534815846-8lbhbsktcaamkq26pojvaueortg81cj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
