@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/coupon/domain/models/coupon_model.dart';

@@ -19,7 +19,6 @@ class WebFlashSaleViewWidget extends StatefulWidget {
 }
 
 class _WebFlashSaleViewWidgetState extends State<WebFlashSaleViewWidget> {
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FlashSaleController>(builder: (flashSaleController) {
@@ -27,98 +26,149 @@ class _WebFlashSaleViewWidgetState extends State<WebFlashSaleViewWidget> {
       int stock = 0;
       int remaining = 0;
       int sold = 0;
-      if(flashSaleController.flashSaleModel != null && flashSaleController.flashSaleModel!.activeProducts != null) {
-        int index = flashSaleController.flashSaleModel!.activeProducts!.length > 1 ? flashSaleController.pageIndex : 0;
+      if (flashSaleController.flashSaleModel != null &&
+          flashSaleController.flashSaleModel!.activeProducts != null) {
+        int index =
+            flashSaleController.flashSaleModel!.activeProducts!.length > 1
+                ? flashSaleController.pageIndex
+                : 0;
         item = flashSaleController.flashSaleModel!.activeProducts![index].item;
-        stock = flashSaleController.flashSaleModel!.activeProducts![index].stock!;
+        stock =
+            flashSaleController.flashSaleModel!.activeProducts![index].stock!;
         sold = flashSaleController.flashSaleModel!.activeProducts![index].sold!;
-        if(stock >= sold) {
+        if (stock >= sold) {
           remaining = stock - sold;
         }
       }
 
-      return flashSaleController.flashSaleModel != null ? flashSaleController.flashSaleModel!.activeProducts != null ? Container(
-        width: Get.width,
-        margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 2),
-        ),
-        child: Column(children: [
+      return flashSaleController.flashSaleModel != null
+          ? flashSaleController.flashSaleModel!.activeProducts != null
+              ? Container(
+                  width: Get.width,
+                  margin:
+                      const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .primaryColor
+                        .withAlpha((0.1 * 255).toInt()),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusDefault),
+                    border: Border.all(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withAlpha((0.3 * 255).toInt()),
+                        width: 2),
+                  ),
+                  child: Column(children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () => Get.toNamed(
+                                  RouteHelper.getFlashSaleDetailsScreen(0)),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('flash_sale'.tr,
+                                        style: robotoBold.copyWith(
+                                            fontSize:
+                                                Dimensions.fontSizeDefault)),
+                                    const SizedBox(
+                                        height:
+                                            Dimensions.paddingSizeExtraSmall),
+                                  ]),
+                            ),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
+                            Flexible(
+                                child: FlashSaleTimerWebHomeView(
+                                    eventDuration:
+                                        flashSaleController.duration)),
+                          ]),
+                    ),
+                    flashSaleController.flashSaleModel!.activeProducts != null
+                        ? FlashSaleCard(
+                            activeProducts: flashSaleController
+                                .flashSaleModel!.activeProducts!,
+                            soldOut: remaining == 0,
+                          )
+                        : const SizedBox(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeDefault),
+                      child: Text(
+                        "${item!.name}",
+                        style: robotoRegular,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-          Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              InkWell(
-                onTap: () => Get.toNamed(RouteHelper.getFlashSaleDetailsScreen(0)),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('flash_sale'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                ]),
-              ),
-              const SizedBox(width: Dimensions.paddingSizeSmall),
-
-              Flexible(child: FlashSaleTimerWebHomeView(eventDuration: flashSaleController.duration)),
-            ]),
-          ),
-
-          flashSaleController.flashSaleModel!.activeProducts != null ? FlashSaleCard(
-            activeProducts: flashSaleController.flashSaleModel!.activeProducts!, soldOut: remaining == 0,
-          ) : const SizedBox(),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-            child: Text("${item!.name}", style: robotoRegular, maxLines: 1, overflow: TextOverflow.ellipsis,),
-          ),
-          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-          /*(Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && item.unitType != null) ? Text(
+                    /*(Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && item.unitType != null) ? Text(
             '(${ item.unitType ?? ''})',
             style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
           ) : const SizedBox(),
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),*/
 
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      item.discount != null && item.discount! > 0
+                          ? Flexible(
+                              child: Text(
+                              PriceConverter.convertPrice(
+                                  Get.find<ItemController>()
+                                      .getStartingPrice(item)),
+                              style: robotoMedium.copyWith(
+                                fontSize: Dimensions.fontSizeExtraSmall,
+                                color: Theme.of(context).disabledColor,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                              textDirection: TextDirection.ltr,
+                            ))
+                          : const SizedBox(),
+                      SizedBox(
+                          width: item.discount != null && item.discount! > 0
+                              ? Dimensions.paddingSizeExtraSmall
+                              : 0),
+                      Flexible(
+                          child: Text(
+                        PriceConverter.convertPrice(
+                          Get.find<ItemController>().getStartingPrice(item),
+                          discount: item.discount,
+                          discountType: item.discountType,
+                        ),
+                        textDirection: TextDirection.ltr,
+                        style: robotoMedium,
+                      )),
+                    ]),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-            item.discount != null && item.discount! > 0  ? Flexible(child: Text(
-              PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(item)),
-              style: robotoMedium.copyWith(
-                fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
-                decoration: TextDecoration.lineThrough,
-              ), textDirection: TextDirection.ltr,
-            )) : const SizedBox(),
-            SizedBox(width: item.discount != null && item.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
-
-            Flexible(child: Text(
-              PriceConverter.convertPrice(
-                Get.find<ItemController>().getStartingPrice(item), discount: item.discount,
-                discountType: item.discountType,
-              ),
-              textDirection: TextDirection.ltr, style: robotoMedium,
-            )),
-          ]),
-          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-          /*Padding(
+                    /*Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtremeLarge),
             child: LinearProgressIndicator(
               borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
               minHeight: 5,
               value: remaining / stock,
               valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.25),
+              backgroundColor: Theme.of(context).primaryColor.withAlpha((0.25 * 255).toInt()),
             ),
           ),*/
 
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text('${'available'.tr} : ', style: robotoRegular.copyWith(color: Theme.of(context).disabledColor)),
-            Text('$remaining ${'item'.tr}', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
-          ]),
-          const SizedBox(height: Dimensions.paddingSizeDefault),
-        ]),
-      ) : const SizedBox() : const WebRecommendedStoreShimmerView();
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text('${'available'.tr} : ',
+                          style: robotoRegular.copyWith(
+                              color: Theme.of(context).disabledColor)),
+                      Text('$remaining ${'item'.tr}',
+                          style: robotoRegular.copyWith(
+                              color: Theme.of(context).primaryColor)),
+                    ]),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
+                  ]),
+                )
+              : const SizedBox()
+          : const WebRecommendedStoreShimmerView();
     });
   }
 }

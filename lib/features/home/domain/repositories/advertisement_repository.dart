@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/home/domain/models/advertisement_model.dart';
 import 'package:sixam_mart/features/home/domain/repositories/advertisement_repository_interface.dart';

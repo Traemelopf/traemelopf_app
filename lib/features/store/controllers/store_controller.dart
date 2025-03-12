@@ -275,7 +275,7 @@ class StoreController extends GetxController implements GetxService {
       _featuredStoreList = [];
       List<Modules> moduleList = [];
       moduleList.addAll(storeServiceInterface.moduleList());
-      response.body['stores'].forEach((store) {
+      response.data['stores'].forEach((store) {
         for (var module in moduleList) {
           if (module.id == Store.fromJson(store).moduleId) {
             if (module.pivot!.zoneId == Store.fromJson(store).zoneId) {
@@ -297,7 +297,7 @@ class StoreController extends GetxController implements GetxService {
       _visitAgainStoreList = [];
       List<Modules> moduleList = [];
       moduleList.addAll(storeServiceInterface.moduleList());
-      response.body.forEach((store) {
+      response.data.forEach((store) {
         for (var module in moduleList) {
           if (module.id == Store.fromJson(store).moduleId) {
             if (module.pivot!.zoneId == Store.fromJson(store).zoneId) {

@@ -20,20 +20,17 @@ class PharmacyHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLoggedIn = AuthHelper.isLoggedIn();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
       Container(
         width: MediaQuery.of(context).size.width,
-        color: Theme.of(context).disabledColor.withOpacity(0.1),
-        child:  const Column(
+        color: Theme.of(context).disabledColor.withAlpha((0.1 * 255).toInt()),
+        child: const Column(
           children: [
             BadWeatherWidget(),
-
             BannerView(isFeatured: false),
             SizedBox(height: 12),
           ],
         ),
       ),
-
       const CategoryView(),
       isLoggedIn ? const VisitAgainView() : const SizedBox(),
       const ProductWithCategoriesView(),
@@ -44,7 +41,6 @@ class PharmacyHomeScreen extends StatelessWidget {
       const NewOnMartView(isShop: false, isPharmacy: true, isNewStore: true),
       const CommonConditionView(),
       const PromotionalBannerView(),
-
     ]);
   }
 }

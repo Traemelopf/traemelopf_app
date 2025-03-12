@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/flash_sale/domain/models/flash_sale_model.dart';
 import 'package:sixam_mart/features/flash_sale/domain/models/product_flash_sale.dart';

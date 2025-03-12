@@ -97,7 +97,7 @@ class _WebLandingPageState extends State<WebLandingPage> {
                                 BorderRadius.circular(Dimensions.radiusDefault),
                             color: Theme.of(context)
                                 .primaryColor
-                                .withOpacity(0.05),
+                                .withAlpha((0.05 * 255).toInt()),
                           ),
                           child: Row(children: [
                             const SizedBox(width: 40),
@@ -165,7 +165,7 @@ class _WebLandingPageState extends State<WebLandingPage> {
                                   Dimensions.radiusDefault),
                               color: Theme.of(context)
                                   .primaryColor
-                                  .withOpacity(0.05),
+                                  .withAlpha((0.05 * 255).toInt()),
                             ),
                             child: Row(children: [
                               Expanded(
@@ -214,11 +214,11 @@ class _WebLandingPageState extends State<WebLandingPage> {
                                         //   hintText: 'search_location'.tr,
                                         //   border: OutlineInputBorder(
                                         //     borderRadius: BorderRadius.circular(10),
-                                        //     borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
+                                        //     borderSide: BorderSide(color: Theme.of(context).primaryColor.withAlpha((0.3 * 255).toInt()), width: 1),
                                         //   ),
                                         //   enabledBorder: OutlineInputBorder(
                                         //     borderRadius: BorderRadius.circular(10),
-                                        //     borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
+                                        //     borderSide: BorderSide(color: Theme.of(context).primaryColor.withAlpha((0.3 * 255).toInt()), width: 1),
                                         //   ),
                                         //   hintStyle: Theme.of(context).textTheme.displayMedium!.copyWith(
                                         //     fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor,
@@ -496,8 +496,9 @@ class _WebLandingPageState extends State<WebLandingPage> {
                                                                   .textTheme
                                                                   .bodyLarge
                                                                   ?.color
-                                                                  ?.withOpacity(
-                                                                      0.6)),
+                                                                  ?.withAlpha((0.6 *
+                                                                          255)
+                                                                      .toInt())),
                                                       onTapUrl: (String url) {
                                                         return launchUrlString(
                                                             url);
@@ -728,8 +729,9 @@ class _WebLandingPageState extends State<WebLandingPage> {
                                                                 color: Theme.of(
                                                                         context)
                                                                     .disabledColor
-                                                                    .withOpacity(
-                                                                        0.6),
+                                                                    .withAlpha((0.6 *
+                                                                            255)
+                                                                        .toInt()),
                                                                 width: 1),
                                                             boxShadow:
                                                                 splashController

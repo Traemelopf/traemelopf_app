@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/notification/domain/models/notification_model.dart';

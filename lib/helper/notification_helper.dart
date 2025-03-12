@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sixam_mart/common/widgets/demo_reset_dialog_widget.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:sixam_mart/features/dashboard/screens/dashboard_screen.dart';
 import 'package:sixam_mart/features/notification/widgets/notifiation_popup_dialog_widget.dart';
 
@@ -322,9 +322,12 @@ class NotificationHelper {
       String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
-    final response = await http.get(Uri.parse(url));
+    final response = await Dio().get(url,
+        options: Options(
+          responseType: ResponseType.bytes,
+        ));
     final File file = File(filePath);
-    await file.writeAsBytes(response.bodyBytes);
+    await file.writeAsBytes(response.data);
     return filePath;
   }
 

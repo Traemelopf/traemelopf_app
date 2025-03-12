@@ -10,7 +10,7 @@ ThemeData dark({Color color = const Color.fromRGBO(230, 39, 25, 1)}) =>
       brightness: Brightness.dark,
       hintColor: const Color(0xFFbebebe),
       cardColor: const Color(0xFF30313C),
-      shadowColor: Colors.white.withOpacity(0.3),
+      shadowColor: Colors.white.withAlpha((0.3 * 255).toInt()),
       textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white70)),
       textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(foregroundColor: color)),

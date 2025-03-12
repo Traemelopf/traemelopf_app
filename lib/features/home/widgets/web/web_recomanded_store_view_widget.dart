@@ -15,68 +15,111 @@ class WebRecommendedStoreView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isFood = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.food;
+    bool isFood = Get.find<SplashController>().module != null &&
+        Get.find<SplashController>().module!.moduleType.toString() ==
+            AppConstants.food;
 
     return GetBuilder<StoreController>(builder: (storeController) {
-      return storeController.recommendedStoreList != null ? Container(
-        margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
-        width: Get.width, height: 302,
-        padding: const EdgeInsets.all(11),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 2),
-        ),
-        child: Column(children: [
-          Text(isFood ? 'recommended_restaurants'.tr : 'recommended_stores'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-          const SizedBox(height: Dimensions.paddingSizeLarge),
-
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-            ),
-            child: storeController.recommendedStoreList!.isNotEmpty ? GridView.builder(
-              itemCount: storeController.recommendedStoreList!.length > 9 ? 9 : storeController.recommendedStoreList!.length,
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: Dimensions.paddingSizeDefault,
-                mainAxisSpacing: Dimensions.paddingSizeDefault,
-                mainAxisExtent: 60,
+      return storeController.recommendedStoreList != null
+          ? Container(
+              margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
+              width: Get.width,
+              height: 302,
+              padding: const EdgeInsets.all(11),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .primaryColor
+                    .withAlpha((0.1 * 255).toInt()),
+                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .primaryColor
+                        .withAlpha((0.3 * 255).toInt()),
+                    width: 2),
               ),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: (){
-                    Get.toNamed(RouteHelper.getStoreRoute(id: storeController.recommendedStoreList![index].id, page: 'store'),
-                      arguments: StoreScreen(store: storeController.recommendedStoreList![index], fromModule: false),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                      child: CustomImage(
-                        image: '${storeController.recommendedStoreList![index].logoFullUrl}',
-                        fit: BoxFit.cover, height: 60, width: double.infinity,
-                      ),
-                    ),
+              child: Column(children: [
+                Text(
+                    isFood
+                        ? 'recommended_restaurants'.tr
+                        : 'recommended_stores'.tr,
+                    style: robotoMedium.copyWith(
+                        fontSize: Dimensions.fontSizeLarge)),
+                const SizedBox(height: Dimensions.paddingSizeLarge),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusDefault),
                   ),
-                );
-              },
-            ) : Center(child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-              child: Text(isFood ? 'currently_no_recommended_restaurant_available'.tr : 'currently_no_recommended_store_available'.tr),
-            )),
-          ),
-        ]),
-      ) : const WebRecommendedStoreShimmerView();
+                  child: storeController.recommendedStoreList!.isNotEmpty
+                      ? GridView.builder(
+                          itemCount:
+                              storeController.recommendedStoreList!.length > 9
+                                  ? 9
+                                  : storeController
+                                      .recommendedStoreList!.length,
+                          shrinkWrap: true,
+                          padding:
+                              const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: Dimensions.paddingSizeDefault,
+                            mainAxisSpacing: Dimensions.paddingSizeDefault,
+                            mainAxisExtent: 60,
+                          ),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Get.toNamed(
+                                  RouteHelper.getStoreRoute(
+                                      id: storeController
+                                          .recommendedStoreList![index].id,
+                                      page: 'store'),
+                                  arguments: StoreScreen(
+                                      store: storeController
+                                          .recommendedStoreList![index],
+                                      fromModule: false),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withAlpha((0.15 * 255).toInt()),
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusDefault),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusDefault),
+                                  child: CustomImage(
+                                    image:
+                                        '${storeController.recommendedStoreList![index].logoFullUrl}',
+                                    fit: BoxFit.cover,
+                                    height: 60,
+                                    width: double.infinity,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                          padding: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
+                          child: Text(isFood
+                              ? 'currently_no_recommended_restaurant_available'
+                                  .tr
+                              : 'currently_no_recommended_store_available'.tr),
+                        )),
+                ),
+              ]),
+            )
+          : const WebRecommendedStoreShimmerView();
     });
   }
 }
@@ -91,22 +134,23 @@ class WebRecommendedStoreShimmerView extends StatelessWidget {
       enabled: true,
       child: Container(
         margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
-        padding:  const EdgeInsets.all(Dimensions.paddingSizeSmall),
-        width: Get.width, height: 302,
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+        width: Get.width,
+        height: 302,
         decoration: BoxDecoration(
           color: Theme.of(context).shadowColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
         ),
         child: Column(children: [
           Container(
-            height: 20, width: double.infinity,
+            height: 20,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             ),
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
-
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
@@ -130,7 +174,8 @@ class WebRecommendedStoreShimmerView extends StatelessWidget {
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Theme.of(context).shadowColor,
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radiusDefault),
                     ),
                   ),
                 );

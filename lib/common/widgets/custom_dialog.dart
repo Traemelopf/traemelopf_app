@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-void showAnimatedDialog(BuildContext context, Widget dialog, {bool isFlip = false, bool dismissible = true}) {
+void showAnimatedDialog(BuildContext context, Widget dialog,
+    {bool isFlip = false, bool dismissible = true}) {
   showGeneralDialog(
     context: context,
     barrierDismissible: dismissible,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    barrierColor: Colors.black.withOpacity(0.5),
+    barrierColor: Colors.black.withAlpha((0.5 * 255).toInt()),
     pageBuilder: (context, animation1, animation2) => dialog,
     transitionDuration: const Duration(milliseconds: 500),
     transitionBuilder: (context, a1, a2, widget) {
-      if(isFlip) {
+      if (isFlip) {
         return Rotation3DTransition(
           alignment: Alignment.center,
-          turns: Tween<double>(begin: math.pi, end: 2.0 * math.pi).animate(CurvedAnimation(parent: a1, curve: const Interval(0.0, 1.0, curve: Curves.linear))),
+          turns: Tween<double>(begin: math.pi, end: 2.0 * math.pi).animate(
+              CurvedAnimation(
+                  parent: a1,
+                  curve: const Interval(0.0, 1.0, curve: Curves.linear))),
           child: FadeTransition(
-            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: a1, curve: const Interval(0.5, 1.0, curve: Curves.elasticOut))),
+            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                    parent: a1,
+                    curve: const Interval(0.5, 1.0, curve: Curves.elasticOut))),
             child: widget,
           ),
         );
-      }else {
+      } else {
         return Transform.scale(
           scale: a1.value,
           child: Opacity(
@@ -38,7 +45,7 @@ class Rotation3DTransition extends AnimatedWidget {
     required Animation<double> turns,
     this.alignment = Alignment.center,
     this.child,
-  })  : super(listenable: turns);
+  }) : super(listenable: turns);
 
   Animation<double> get turns => listenable as Animation<double>;
 

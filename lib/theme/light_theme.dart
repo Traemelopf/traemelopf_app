@@ -10,7 +10,7 @@ ThemeData light({Color color = const Color.fromRGBO(230, 39, 25, 1)}) =>
       brightness: Brightness.light,
       hintColor: const Color(0xFF9F9F9F),
       cardColor: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.03),
+      shadowColor: Colors.black.withAlpha((0.03 * 255).toInt()),
       textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(foregroundColor: color)),
       colorScheme: ColorScheme.light(primary: color, secondary: color)
