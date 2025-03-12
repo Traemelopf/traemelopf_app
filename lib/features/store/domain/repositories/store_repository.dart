@@ -1,4 +1,5 @@
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/splash/controllers/splash_controller.dart';
@@ -20,53 +21,69 @@ class StoreRepository implements StoreRepositoryInterface {
   StoreRepository({required this.apiClient, required this.sharedPreferences});
 
   @override
-  Future getList({int? offset, bool isStoreList = false, String? filterBy, bool isPopularStoreList = false, String? type, bool isLatestStoreList = false,
-    bool isFeaturedStoreList = false, bool isVisitAgainStoreList = false, bool isStoreRecommendedItemList = false, int? storeId,
-    bool isStoreBannerList = false, bool isRecommendedStoreList = false}) async {
-    if(isStoreList){
+  Future getList(
+      {int? offset,
+      bool isStoreList = false,
+      String? filterBy,
+      bool isPopularStoreList = false,
+      String? type,
+      bool isLatestStoreList = false,
+      bool isFeaturedStoreList = false,
+      bool isVisitAgainStoreList = false,
+      bool isStoreRecommendedItemList = false,
+      int? storeId,
+      bool isStoreBannerList = false,
+      bool isRecommendedStoreList = false}) async {
+    if (isStoreList) {
       return await _getStoreList(offset!, filterBy!, type!);
-    }else if(isPopularStoreList){
+    } else if (isPopularStoreList) {
       return await _getPopularStoreList(type!);
-    }else if(isLatestStoreList){
+    } else if (isLatestStoreList) {
       return await _getLatestStoreList(type!);
-    }else if(isFeaturedStoreList){
+    } else if (isFeaturedStoreList) {
       return await _getFeaturedStoreList();
-    }else if(isVisitAgainStoreList){
+    } else if (isVisitAgainStoreList) {
       return await _getVisitAgainStoreList();
-    }else if(isStoreRecommendedItemList){
+    } else if (isStoreRecommendedItemList) {
       return await _getStoreRecommendedItemList(storeId);
-    }else if(isStoreBannerList){
+    } else if (isStoreBannerList) {
       return await _getStoreBannerList(storeId);
-    }else if(isRecommendedStoreList){
+    } else if (isRecommendedStoreList) {
       return await _getRecommendedStoreList();
     }
   }
 
-  Future<StoreModel?> _getStoreList(int offset, String filterBy, String storeType) async {
+  Future<StoreModel?> _getStoreList(
+      int offset, String filterBy, String storeType) async {
     StoreModel? storeModel;
-    Response response = await apiClient.getData('${AppConstants.storeUri}/$filterBy?store_type=$storeType&offset=$offset&limit=12');
-    if(response.statusCode == 200){
-      storeModel = StoreModel.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.storeUri}/$filterBy?store_type=$storeType&offset=$offset&limit=12');
+    if (response.statusCode == 200) {
+      storeModel = StoreModel.fromJson(response.data);
     }
     return storeModel;
   }
 
   Future<List<Store>?> _getPopularStoreList(String type) async {
     List<Store>? popularStoreList;
-    Response response = await apiClient.getData('${AppConstants.popularStoreUri}?type=$type');
+    final response =
+        await apiClient.getData('${AppConstants.popularStoreUri}?type=$type');
     if (response.statusCode == 200) {
       popularStoreList = [];
-      response.body['stores'].forEach((store) => popularStoreList!.add(Store.fromJson(store)));
+      response.data['stores']
+          .forEach((store) => popularStoreList!.add(Store.fromJson(store)));
     }
     return popularStoreList;
   }
 
   Future<List<Store>?> _getLatestStoreList(String type) async {
     List<Store>? latestStoreList;
-    Response response = await apiClient.getData('${AppConstants.latestStoreUri}?type=$type');
+    final response =
+        await apiClient.getData('${AppConstants.latestStoreUri}?type=$type');
     if (response.statusCode == 200) {
       latestStoreList = [];
-      response.body['stores'].forEach((store) => latestStoreList!.add(Store.fromJson(store)));
+      response.data['stores']
+          .forEach((store) => latestStoreList!.add(Store.fromJson(store)));
     }
     return latestStoreList;
   }
@@ -74,7 +91,10 @@ class StoreRepository implements StoreRepositoryInterface {
   Future<Response> _getFeaturedStoreList() async {
     return await apiClient.getData(
       '${AppConstants.storeUri}/all?featured=1&offset=1&limit=50',
-      headers: Get.find<SplashController>().module == null && Get.find<SplashController>().configModel!.module == null ? HeaderHelper.featuredHeader() : null,
+      headers: Get.find<SplashController>().module == null &&
+              Get.find<SplashController>().configModel!.module == null
+          ? HeaderHelper.featuredHeader()
+          : null,
     );
   }
 
@@ -83,93 +103,132 @@ class StoreRepository implements StoreRepositoryInterface {
   }
 
   @override
-  Future<Store?> getStoreDetails(String storeID, bool fromCart, String slug, String languageCode, ModuleModel? module, int? cacheModuleId, int? moduleId) async {
+  Future<Store?> getStoreDetails(
+      String storeID,
+      bool fromCart,
+      String slug,
+      String languageCode,
+      ModuleModel? module,
+      int? cacheModuleId,
+      int? moduleId) async {
     Store? store;
-    Map<String, String>? header ;
-    if(fromCart){
+    Map<String, String>? header;
+    if (fromCart) {
       AddressModel? addressModel = AddressHelper.getUserAddressFromSharedPref();
       header = apiClient.updateHeader(
-        sharedPreferences.getString(AppConstants.token), addressModel?.zoneIds, addressModel?.areaIds,
-        languageCode, module == null ? cacheModuleId : moduleId,
-        addressModel?.latitude, addressModel?.longitude, setHeader: false,
+        sharedPreferences.getString(AppConstants.token),
+        addressModel?.zoneIds,
+        addressModel?.areaIds,
+        languageCode,
+        module == null ? cacheModuleId : moduleId,
+        addressModel?.latitude,
+        addressModel?.longitude,
+        setHeader: false,
       );
     }
-    if(slug.isNotEmpty){
+    if (slug.isNotEmpty) {
       header = apiClient.updateHeader(
-        sharedPreferences.getString(AppConstants.token), [], [],
-        languageCode, 0, '', '', setHeader: false,
+        sharedPreferences.getString(AppConstants.token),
+        [],
+        [],
+        languageCode,
+        0,
+        '',
+        '',
+        setHeader: false,
       );
     }
-    Response response = await apiClient.getData('${AppConstants.storeDetailsUri}${slug.isNotEmpty ? slug : storeID}', headers: header);
-    if(response.statusCode == 200){
-      store = Store.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.storeDetailsUri}${slug.isNotEmpty ? slug : storeID}',
+        headers: header);
+    if (response.statusCode == 200) {
+      store = Store.fromJson(response.data);
     }
     return store;
   }
 
   @override
-  Future<ItemModel?> getStoreItemList(int? storeID, int offset, int? categoryID, String type) async {
+  Future<ItemModel?> getStoreItemList(
+      int? storeID, int offset, int? categoryID, String type) async {
     ItemModel? storeItemModel;
-    Response response = await apiClient.getData(
-      '${AppConstants.storeItemUri}?store_id=$storeID&category_id=$categoryID&offset=$offset&limit=13&type=$type');
-    if(response.statusCode == 200){
-      storeItemModel = ItemModel.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.storeItemUri}?store_id=$storeID&category_id=$categoryID&offset=$offset&limit=13&type=$type');
+    if (response.statusCode == 200) {
+      storeItemModel = ItemModel.fromJson(response.data);
     }
     return storeItemModel;
   }
 
   @override
-  Future<ItemModel?> getStoreSearchItemList(String searchText, String? storeID, int offset, String type, int? categoryID) async {
+  Future<ItemModel?> getStoreSearchItemList(String searchText, String? storeID,
+      int offset, String type, int? categoryID) async {
     ItemModel? storeSearchItemModel;
-    Response response = await apiClient.getData(
-      '${AppConstants.searchUri}items/search?store_id=$storeID&name=$searchText&offset=$offset&limit=10&type=$type&category_id=${categoryID ?? ''}');
-    if(response.statusCode == 200){
-      storeSearchItemModel = ItemModel.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.searchUri}items/search?store_id=$storeID&name=$searchText&offset=$offset&limit=10&type=$type&category_id=${categoryID ?? ''}');
+    if (response.statusCode == 200) {
+      storeSearchItemModel = ItemModel.fromJson(response.data);
     }
     return storeSearchItemModel;
   }
 
-  Future<RecommendedItemModel?> _getStoreRecommendedItemList(int? storeId) async {
+  Future<RecommendedItemModel?> _getStoreRecommendedItemList(
+      int? storeId) async {
     RecommendedItemModel? recommendedItemModel;
-    Response response = await apiClient.getData('${AppConstants.storeRecommendedItemUri}?store_id=$storeId&offset=1&limit=50');
-    if(response.statusCode == 200){
-      recommendedItemModel = RecommendedItemModel.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.storeRecommendedItemUri}?store_id=$storeId&offset=1&limit=50');
+    if (response.statusCode == 200) {
+      recommendedItemModel = RecommendedItemModel.fromJson(response.data);
     }
     return recommendedItemModel;
   }
 
   @override
-  Future<CartSuggestItemModel?> getCartStoreSuggestedItemList(int? storeId, String languageCode, ModuleModel? module, int? cacheModuleId, int? moduleId) async {
+  Future<CartSuggestItemModel?> getCartStoreSuggestedItemList(
+      int? storeId,
+      String languageCode,
+      ModuleModel? module,
+      int? cacheModuleId,
+      int? moduleId) async {
     CartSuggestItemModel? cartSuggestItemModel;
     AddressModel? addressModel = AddressHelper.getUserAddressFromSharedPref();
     Map<String, String> header = apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.token), addressModel?.zoneIds, addressModel?.areaIds,
-      languageCode, module == null ? cacheModuleId : moduleId,
-      addressModel?.latitude, addressModel?.longitude, setHeader: false,
+      sharedPreferences.getString(AppConstants.token),
+      addressModel?.zoneIds,
+      addressModel?.areaIds,
+      languageCode,
+      module == null ? cacheModuleId : moduleId,
+      addressModel?.latitude,
+      addressModel?.longitude,
+      setHeader: false,
     );
-    Response response = await apiClient.getData('${AppConstants.cartStoreSuggestedItemsUri}?recommended=1&store_id=$storeId&offset=1&limit=50', headers: header);
-    if(response.statusCode == 200){
-      cartSuggestItemModel = CartSuggestItemModel.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.cartStoreSuggestedItemsUri}?recommended=1&store_id=$storeId&offset=1&limit=50',
+        headers: header);
+    if (response.statusCode == 200) {
+      cartSuggestItemModel = CartSuggestItemModel.fromJson(response.data);
     }
     return cartSuggestItemModel;
   }
 
   Future<List<StoreBannerModel>?> _getStoreBannerList(int? storeId) async {
     List<StoreBannerModel>? storeBanners;
-    Response response = await apiClient.getData('${AppConstants.storeBannersUri}$storeId');
+    final response =
+        await apiClient.getData('${AppConstants.storeBannersUri}$storeId');
     if (response.statusCode == 200) {
       storeBanners = [];
-      response.body.forEach((banner) => storeBanners!.add(StoreBannerModel.fromJson(banner)));
+      response.data.forEach(
+          (banner) => storeBanners!.add(StoreBannerModel.fromJson(banner)));
     }
     return storeBanners;
   }
 
   Future<List<Store>?> _getRecommendedStoreList() async {
     List<Store>? recommendedStoreList;
-    Response response = await apiClient.getData(AppConstants.recommendedStoreUri);
+    final response = await apiClient.getData(AppConstants.recommendedStoreUri);
     if (response.statusCode == 200) {
       recommendedStoreList = [];
-      response.body['stores'].forEach((store) => recommendedStoreList!.add(Store.fromJson(store)));
+      response.data['stores']
+          .forEach((store) => recommendedStoreList!.add(Store.fromJson(store)));
     }
     return recommendedStoreList;
   }
@@ -193,5 +252,4 @@ class StoreRepository implements StoreRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-  
 }

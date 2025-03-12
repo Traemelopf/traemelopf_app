@@ -13,9 +13,10 @@ class ItemRepository implements ItemRepositoryInterface {
   @override
   Future<BasicMedicineModel?> getBasicMedicine() async {
     BasicMedicineModel? basicMedicineModel;
-    Response response = await apiClient.getData('${AppConstants.basicMedicineUri}?offset=1&limit=50');
+    final response = await apiClient
+        .getData('${AppConstants.basicMedicineUri}?offset=1&limit=50');
     if (response.statusCode == 200) {
-      basicMedicineModel = BasicMedicineModel.fromJson(response.body);
+      basicMedicineModel = BasicMedicineModel.fromJson(response.data);
     }
     return basicMedicineModel;
   }
@@ -32,7 +33,7 @@ class ItemRepository implements ItemRepositoryInterface {
 
   @override
   Future get(String? id, {bool isConditionWiseItem = false}) async {
-    if(isConditionWiseItem) {
+    if (isConditionWiseItem) {
       return await _getConditionsWiseItems(int.parse(id!));
     } else {
       return await _getItemDetails(int.parse(id!));
@@ -41,94 +42,110 @@ class ItemRepository implements ItemRepositoryInterface {
 
   Future<Item?> _getItemDetails(int? itemID) async {
     Item? item;
-    Response response = await apiClient.getData('${AppConstants.itemDetailsUri}$itemID');
+    final response =
+        await apiClient.getData('${AppConstants.itemDetailsUri}$itemID');
     if (response.statusCode == 200) {
-      item = Item.fromJson(response.body);
+      item = Item.fromJson(response.data);
     }
     return item;
   }
 
   Future<List<Item>?> _getConditionsWiseItems(int id) async {
     List<Item>? conditionWiseProduct;
-    Response response = await apiClient.getData('${AppConstants.conditionWiseItemUri}$id?limit=15&offset=1');
+    final response = await apiClient
+        .getData('${AppConstants.conditionWiseItemUri}$id?limit=15&offset=1');
     if (response.statusCode == 200) {
       conditionWiseProduct = [];
-      conditionWiseProduct.addAll(ItemModel.fromJson(response.body).items!);
+      conditionWiseProduct.addAll(ItemModel.fromJson(response.data).items!);
     }
     return conditionWiseProduct;
   }
 
   @override
-  Future getList({int? offset, String? type, bool isPopularItem = false, bool isReviewedItem = false, bool isFeaturedCategoryItems = false, bool isRecommendedItems = false, bool isCommonConditions = false, bool isDiscountedItems = false}) async {
-    if(isPopularItem) {
+  Future getList(
+      {int? offset,
+      String? type,
+      bool isPopularItem = false,
+      bool isReviewedItem = false,
+      bool isFeaturedCategoryItems = false,
+      bool isRecommendedItems = false,
+      bool isCommonConditions = false,
+      bool isDiscountedItems = false}) async {
+    if (isPopularItem) {
       return await _getPopularItemList(type!);
-    } else if(isReviewedItem) {
+    } else if (isReviewedItem) {
       return await _getReviewedItemList(type!);
-    } else if(isFeaturedCategoryItems) {
+    } else if (isFeaturedCategoryItems) {
       return await _getFeaturedCategoriesItemList();
-    } else if(isRecommendedItems) {
+    } else if (isRecommendedItems) {
       return await _getRecommendedItemList(type!);
-    } else if(isCommonConditions) {
+    } else if (isCommonConditions) {
       return await _getCommonConditions();
-    } else if(isDiscountedItems) {
+    } else if (isDiscountedItems) {
       return await _getDiscountedItemList(type!);
     }
   }
 
   Future<List<Item>?> _getPopularItemList(String type) async {
     List<Item>? popularItemList;
-    Response response = await apiClient.getData('${AppConstants.popularItemUri}?type=$type');
+    final response =
+        await apiClient.getData('${AppConstants.popularItemUri}?type=$type');
     if (response.statusCode == 200) {
       popularItemList = [];
-      popularItemList.addAll(ItemModel.fromJson(response.body).items!);
+      popularItemList.addAll(ItemModel.fromJson(response.data).items!);
     }
     return popularItemList;
   }
 
   Future<ItemModel?> _getReviewedItemList(String type) async {
     ItemModel? itemModel;
-    Response response = await apiClient.getData('${AppConstants.reviewedItemUri}?type=$type');
-    if(response.statusCode == 200) {
-      itemModel = ItemModel.fromJson(response.body);
+    final response =
+        await apiClient.getData('${AppConstants.reviewedItemUri}?type=$type');
+    if (response.statusCode == 200) {
+      itemModel = ItemModel.fromJson(response.data);
     }
     return itemModel;
   }
 
   Future<ItemModel?> _getFeaturedCategoriesItemList() async {
     ItemModel? featuredCategoriesItem;
-    Response response = await apiClient.getData('${AppConstants.featuredCategoriesItemsUri}?limit=30&offset=1');
+    final response = await apiClient.getData(
+        '${AppConstants.featuredCategoriesItemsUri}?limit=30&offset=1');
     if (response.statusCode == 200) {
-      featuredCategoriesItem = ItemModel.fromJson(response.body);
+      featuredCategoriesItem = ItemModel.fromJson(response.data);
     }
     return featuredCategoriesItem;
   }
 
   Future<List<Item>?> _getRecommendedItemList(String type) async {
     List<Item>? recommendedItemList;
-    Response response = await apiClient.getData('${AppConstants.recommendedItemsUri}$type&limit=30');
+    final response = await apiClient
+        .getData('${AppConstants.recommendedItemsUri}$type&limit=30');
     if (response.statusCode == 200) {
       recommendedItemList = [];
-      recommendedItemList.addAll(ItemModel.fromJson(response.body).items!);
+      recommendedItemList.addAll(ItemModel.fromJson(response.data).items!);
     }
     return recommendedItemList;
   }
 
   Future<List<CommonConditionModel>?> _getCommonConditions() async {
     List<CommonConditionModel>? commonConditions;
-    Response response = await apiClient.getData(AppConstants.commonConditionUri);
+    final response = await apiClient.getData(AppConstants.commonConditionUri);
     if (response.statusCode == 200) {
       commonConditions = [];
-      response.body.forEach((condition) => commonConditions!.add(CommonConditionModel.fromJson(condition)));
+      response.data.forEach((condition) =>
+          commonConditions!.add(CommonConditionModel.fromJson(condition)));
     }
     return commonConditions;
   }
 
   Future<List<Item>?> _getDiscountedItemList(String type) async {
     List<Item>? discountedItemList;
-    Response response = await apiClient.getData('${AppConstants.discountedItemsUri}?type=$type&offset=1&limit=50');
+    final response = await apiClient.getData(
+        '${AppConstants.discountedItemsUri}?type=$type&offset=1&limit=50');
     if (response.statusCode == 200) {
       discountedItemList = [];
-      discountedItemList.addAll(ItemModel.fromJson(response.body).items!);
+      discountedItemList.addAll(ItemModel.fromJson(response.data).items!);
     }
     return discountedItemList;
   }
@@ -137,5 +154,4 @@ class ItemRepository implements ItemRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

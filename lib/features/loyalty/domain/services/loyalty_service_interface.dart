@@ -1,4 +1,4 @@
-import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:dio/dio.dart';
 import 'package:sixam_mart/common/models/transaction_model.dart';
 
 abstract class LoyaltyServiceInterface {

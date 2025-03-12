@@ -1,4 +1,5 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart' show GetPlatform;
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/business/domain/models/business_plan_body.dart';
 import 'package:sixam_mart/features/business/domain/models/package_model.dart';
@@ -14,27 +15,29 @@ class BusinessRepo implements BusinessRepoInterface<dynamic> {
 
   @override
   Future<Response> setUpBusinessPlan(BusinessPlanBody businessPlanBody) async {
-    return await apiClient.postData(AppConstants.businessPlanUri, businessPlanBody.toJson());
+    return await apiClient.postData(
+        AppConstants.businessPlanUri, businessPlanBody.toJson());
   }
 
   @override
   Future<Response> subscriptionPayment(String id, String? paymentName) async {
     String callback = '';
-    if(GetPlatform.isWeb) {
+    if (GetPlatform.isWeb) {
       String? hostname = html.window.location.hostname;
       String protocol = html.window.location.protocol;
       callback = '$protocol//$hostname${RouteHelper.subscriptionSuccess}';
     }
 
-    return await apiClient.postData(AppConstants.businessPlanPaymentUri, {'id': id, 'payment_gateway': paymentName, 'callback': callback});
+    return await apiClient.postData(AppConstants.businessPlanPaymentUri,
+        {'id': id, 'payment_gateway': paymentName, 'callback': callback});
   }
 
   @override
   Future<PackageModel?> getList({int? offset}) async {
     PackageModel? packageModel;
-    Response response = await apiClient.getData(AppConstants.storePackagesUri);
-    if(response.statusCode == 200) {
-      packageModel = PackageModel.fromJson(response.body);
+    final response = await apiClient.getData(AppConstants.storePackagesUri);
+    if (response.statusCode == 200) {
+      packageModel = PackageModel.fromJson(response.data);
     }
     return packageModel;
   }
@@ -58,5 +61,4 @@ class BusinessRepo implements BusinessRepoInterface<dynamic> {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

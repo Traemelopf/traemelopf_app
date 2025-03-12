@@ -1,4 +1,3 @@
-import 'package:get/get_connect/connect.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:sixam_mart/common/models/response_model.dart';
 import 'package:sixam_mart/api/api_client.dart';
@@ -17,14 +16,20 @@ class AddressRepository implements AddressRepositoryInterface<AddressModel> {
   }
 
   Future<ResponseModel> _addAddress(AddressModel addressModel) async {
-    Response response = await apiClient.postData(AppConstants.addAddressUri, addressModel.toJson(), handleError: false);
+    final response = await apiClient.postData(
+        AppConstants.addAddressUri, addressModel.toJson(),
+        handleError: false);
     if (response.statusCode == 200) {
-      String? message = response.body["message"];
+      String? message = response.data["message"];
       List<int> zoneIds = [];
-      response.body['zone_ids'].forEach((z) => zoneIds.add(z));
+      response.data['zone_ids'].forEach((z) => zoneIds.add(z));
       return ResponseModel(true, message, zoneIds: zoneIds);
     } else {
-      return ResponseModel(false, response.statusText == 'Out of coverage!' ? 'service_not_available_in_this_area'.tr : response.statusText);
+      return ResponseModel(
+          false,
+          response.statusMessage == 'Out of coverage!'
+              ? 'service_not_available_in_this_area'.tr
+              : response.statusMessage);
     }
   }
 
@@ -34,11 +39,13 @@ class AddressRepository implements AddressRepositoryInterface<AddressModel> {
   }
 
   Future<ResponseModel> _removeAddressByID(int? id) async {
-    Response response = await apiClient.postData('${AppConstants.removeAddressUri}$id', {"_method": "delete"}, handleError: false);
+    final response = await apiClient.postData(
+        '${AppConstants.removeAddressUri}$id', {"_method": "delete"},
+        handleError: false);
     if (response.statusCode == 200) {
-      return ResponseModel(true, response.body['message']);
+      return ResponseModel(true, response.data['message']);
     } else {
-      return ResponseModel(false, response.statusText);
+      return ResponseModel(false, response.statusMessage);
     }
   }
 
@@ -54,10 +61,10 @@ class AddressRepository implements AddressRepositoryInterface<AddressModel> {
 
   Future<List<AddressModel>?> _getAllAddress() async {
     List<AddressModel>? addressList;
-    Response response = await apiClient.getData(AppConstants.addressListUri);
+    final response = await apiClient.getData(AppConstants.addressListUri);
     if (response.statusCode == 200) {
       addressList = [];
-      response.body['addresses'].forEach((address) {
+      response.data['addresses'].forEach((address) {
         addressList!.add(AddressModel.fromJson(address));
       });
     }
@@ -69,13 +76,14 @@ class AddressRepository implements AddressRepositoryInterface<AddressModel> {
     return await _updateAddress(body, id);
   }
 
-  Future<ResponseModel> _updateAddress(Map<String, dynamic> addressBody, int? addressId) async {
-    Response response = await apiClient.putData('${AppConstants.updateAddressUri}$addressId', addressBody);
+  Future<ResponseModel> _updateAddress(
+      Map<String, dynamic> addressBody, int? addressId) async {
+    final response = await apiClient.putData(
+        '${AppConstants.updateAddressUri}$addressId', addressBody);
     if (response.statusCode == 200) {
-      return ResponseModel(true, response.body["message"]);
+      return ResponseModel(true, response.data["message"]);
     } else {
-      return ResponseModel(false, response.statusText);
+      return ResponseModel(false, response.statusMessage);
     }
   }
-
 }

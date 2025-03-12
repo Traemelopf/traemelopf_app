@@ -1,4 +1,5 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixam_mart/common/models/transaction_model.dart';
 import 'package:sixam_mart/api/api_client.dart';
@@ -8,24 +9,22 @@ import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:universal_html/html.dart' as html;
 
-class WalletRepository implements WalletRepositoryInterface{
+class WalletRepository implements WalletRepositoryInterface {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  WalletRepository( {required this.apiClient, required this.sharedPreferences});
+  WalletRepository({required this.apiClient, required this.sharedPreferences});
 
   @override
   Future<Response> addFundToWallet(double amount, String paymentMethod) async {
     String? hostname = html.window.location.hostname;
     String protocol = html.window.location.protocol;
 
-    return await apiClient.postData(AppConstants.addFundUri,
-      {
-        "amount": amount,
-        "payment_method": paymentMethod,
-        "payment_platform": GetPlatform.isWeb ? 'web' : '',
-        "callback": '$protocol//$hostname${RouteHelper.wallet}',
-      }
-    );
+    return await apiClient.postData(AppConstants.addFundUri, {
+      "amount": amount,
+      "payment_method": paymentMethod,
+      "payment_platform": GetPlatform.isWeb ? 'web' : '',
+      "callback": '$protocol//$hostname${RouteHelper.wallet}',
+    });
   }
 
   @override
@@ -54,29 +53,32 @@ class WalletRepository implements WalletRepositoryInterface{
   }
 
   @override
-  Future getList({int? offset, String? sortingType, bool isBonusList = false}) async {
-    if(isBonusList) {
+  Future getList(
+      {int? offset, String? sortingType, bool isBonusList = false}) async {
+    if (isBonusList) {
       return await _getWalletBonusList();
-    } else{
+    } else {
       return await _getWalletTransactionList(offset.toString(), sortingType!);
     }
   }
 
-  Future<TransactionModel?> _getWalletTransactionList(String offset, String sortingType) async {
+  Future<TransactionModel?> _getWalletTransactionList(
+      String offset, String sortingType) async {
     TransactionModel? transactionModel;
-    Response response = await apiClient.getData('${AppConstants.walletTransactionUri}?offset=$offset&limit=10&type=$sortingType');
+    final response = await apiClient.getData(
+        '${AppConstants.walletTransactionUri}?offset=$offset&limit=10&type=$sortingType');
     if (response.statusCode == 200) {
-      transactionModel = TransactionModel.fromJson(response.body);
+      transactionModel = TransactionModel.fromJson(response.data);
     }
     return transactionModel;
   }
 
   Future<List<FundBonusModel>?> _getWalletBonusList() async {
     List<FundBonusModel>? fundBonusList;
-    Response response = await apiClient.getData(AppConstants.walletBonusUri);
+    final response = await apiClient.getData(AppConstants.walletBonusUri);
     if (response.statusCode == 200) {
       fundBonusList = [];
-      response.body.forEach((value){
+      response.data.forEach((value) {
         fundBonusList!.add(FundBonusModel.fromJson(value));
       });
     }
@@ -87,6 +89,4 @@ class WalletRepository implements WalletRepositoryInterface{
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
-  
 }

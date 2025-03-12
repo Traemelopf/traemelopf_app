@@ -18,7 +18,7 @@ class OnBoardingController extends GetxController implements GetxService {
   }
 
   void getOnBoardingList() async {
-    Response response = await onboardServiceInterface.getOnBoardingList();
+    final response = await onboardServiceInterface.getOnBoardingList();
     if (response.statusCode == 200) {
       _onBoardingList = [];
       _onBoardingList.addAll(response.body);
@@ -26,5 +26,4 @@ class OnBoardingController extends GetxController implements GetxService {
     }
     update();
   }
-
 }

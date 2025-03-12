@@ -13,15 +13,16 @@ class ProfileRepository implements ProfileRepositoryInterface {
   @override
   Future<UserInfoModel?> get(String? id) async {
     UserInfoModel? userInfoModel;
-    Response response = await apiClient.getData(AppConstants.customerInfoUri);
+    final response = await apiClient.getData(AppConstants.customerInfoUri);
     if (response.statusCode == 200) {
-      userInfoModel = UserInfoModel.fromJson(response.body);
+      userInfoModel = UserInfoModel.fromJson(response.data);
     }
     return userInfoModel;
   }
 
   @override
-  Future<ResponseModel> updateProfile(UserInfoModel userInfoModel, XFile? data, String token) async {
+  Future<ResponseModel> updateProfile(
+      UserInfoModel userInfoModel, XFile? data, String token) async {
     ResponseModel responseModel;
     Map<String, String> body = {
       'f_name': userInfoModel.fName!,
@@ -29,11 +30,13 @@ class ProfileRepository implements ProfileRepositoryInterface {
       'email': userInfoModel.email!,
     };
 
-    Response response = await apiClient.postMultipartData(AppConstants.updateProfileUri, body, [MultipartBody('image', data)], handleError: false);
+    final response = await apiClient.postMultipartData(
+        AppConstants.updateProfileUri, body, [MultipartBody('image', data)],
+        handleError: false);
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, response.bodyString);
+      responseModel = ResponseModel(true, response.data);
     } else {
-      responseModel = ResponseModel(false, response.statusText);
+      responseModel = ResponseModel(false, response.statusMessage);
     }
     return responseModel;
   }
@@ -47,11 +50,12 @@ class ProfileRepository implements ProfileRepositoryInterface {
       'email': userInfoModel.email,
       'password': userInfoModel.password,
     };
-    Response response = await apiClient.postData(AppConstants.updateProfileUri, body, handleError: false);
+    final response = await apiClient
+        .postData(AppConstants.updateProfileUri, body, handleError: false);
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, response.body["message"]);
+      responseModel = ResponseModel(true, response.data["message"]);
     } else {
-      responseModel = ResponseModel(false, response.statusText);
+      responseModel = ResponseModel(false, response.statusMessage);
     }
     return responseModel;
   }
@@ -59,11 +63,13 @@ class ProfileRepository implements ProfileRepositoryInterface {
   @override
   Future<ResponseModel> delete(int? id) async {
     ResponseModel responseModel;
-    Response response = await apiClient.deleteData(AppConstants.customerRemoveUri, handleError: false);
+    final response = await apiClient.deleteData(AppConstants.customerRemoveUri,
+        handleError: false);
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, 'your_account_remove_successfully'.tr);
+      responseModel =
+          ResponseModel(true, 'your_account_remove_successfully'.tr);
     } else {
-      responseModel = ResponseModel(false, response.statusText);
+      responseModel = ResponseModel(false, response.statusMessage);
     }
     return responseModel;
   }
@@ -82,5 +88,4 @@ class ProfileRepository implements ProfileRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-  
 }

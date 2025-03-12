@@ -1,4 +1,4 @@
-import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:dio/dio.dart';
 import 'package:sixam_mart/features/checkout/domain/models/place_order_body_model.dart';
 import 'package:sixam_mart/features/parcel/domain/models/parcel_category_model.dart';
 import 'package:sixam_mart/features/parcel/domain/models/video_content_model.dart';
@@ -7,7 +7,7 @@ import 'package:sixam_mart/features/payment/domain/models/offline_method_model.d
 
 import '../models/parcel_instruction_model.dart';
 
-abstract class ParcelServiceInterface{
+abstract class ParcelServiceInterface {
   Future<List<ParcelCategoryModel>?> getParcelCategory();
   Future<List<Data>?> getParcelInstruction(int offset);
   Future<WhyChooseModel?> getWhyChooseDetails();

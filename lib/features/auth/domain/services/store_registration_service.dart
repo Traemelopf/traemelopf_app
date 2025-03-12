@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/common/models/module_model.dart';
 import 'package:sixam_mart/features/business/domain/models/package_model.dart';
@@ -10,9 +10,12 @@ import 'package:sixam_mart/features/auth/domain/services/store_registration_serv
 
 class StoreRegistrationService implements StoreRegistrationServiceInterface {
   final StoreRegistrationRepositoryInterface storeRegistrationRepoInterface;
-  final DeliverymanRegistrationRepositoryInterface deliverymanRegistrationRepositoryInterface;
+  final DeliverymanRegistrationRepositoryInterface
+      deliverymanRegistrationRepositoryInterface;
 
-  StoreRegistrationService({required this.deliverymanRegistrationRepositoryInterface, required this.storeRegistrationRepoInterface});
+  StoreRegistrationService(
+      {required this.deliverymanRegistrationRepositoryInterface,
+      required this.storeRegistrationRepoInterface});
 
   @override
   Future<List<ZoneDataModel>?> getZoneList() async {
@@ -20,10 +23,11 @@ class StoreRegistrationService implements StoreRegistrationServiceInterface {
   }
 
   @override
-  int? prepareSelectedZoneIndex(List<int>? zoneIds, List<ZoneDataModel>? zoneList) {
+  int? prepareSelectedZoneIndex(
+      List<int>? zoneIds, List<ZoneDataModel>? zoneList) {
     int? selectedZoneIndex = 0;
-    for(int index=0; index<zoneList!.length; index++) {
-      if(zoneIds!.contains(zoneList[index].id)) {
+    for (int index = 0; index < zoneList!.length; index++) {
+      if (zoneIds!.contains(zoneList[index].id)) {
         selectedZoneIndex = index;
         break;
       }
@@ -33,12 +37,15 @@ class StoreRegistrationService implements StoreRegistrationServiceInterface {
 
   @override
   Future<List<ModuleModel>?> getModules(int? zoneId) async {
-    return await deliverymanRegistrationRepositoryInterface.getList(isZone: false, zoneId: zoneId);
+    return await deliverymanRegistrationRepositoryInterface.getList(
+        isZone: false, zoneId: zoneId);
   }
 
   @override
-  Future<Response> registerStore(StoreBodyModel store, XFile? logo, XFile? cover) async {
-    return await storeRegistrationRepoInterface.registerStore(store, logo, cover);
+  Future<Response> registerStore(
+      StoreBodyModel store, XFile? logo, XFile? cover) async {
+    return await storeRegistrationRepoInterface.registerStore(
+        store, logo, cover);
   }
 
   @override
@@ -50,5 +57,4 @@ class StoreRegistrationService implements StoreRegistrationServiceInterface {
   Future<PackageModel?> getPackageList() async {
     return await storeRegistrationRepoInterface.getList();
   }
-
 }

@@ -10,30 +10,35 @@ class CampaignRepository implements CampaignRepositoryInterface {
   CampaignRepository({required this.apiClient});
 
   @override
-  Future getList({int? offset, bool isBasicCampaign = false, bool isItemCampaign = false}) async {
-    if(isBasicCampaign) {
+  Future getList(
+      {int? offset,
+      bool isBasicCampaign = false,
+      bool isItemCampaign = false}) async {
+    if (isBasicCampaign) {
       return await _getBasicCampaignList();
-    } else if(isItemCampaign) {
+    } else if (isItemCampaign) {
       return await _getItemCampaignList();
     }
   }
 
   Future<List<BasicCampaignModel>?> _getBasicCampaignList() async {
     List<BasicCampaignModel>? basicCampaignList;
-    Response response = await apiClient.getData(AppConstants.basicCampaignUri);
+    final response = await apiClient.getData(AppConstants.basicCampaignUri);
     if (response.statusCode == 200) {
       basicCampaignList = [];
-      response.body.forEach((campaign) => basicCampaignList!.add(BasicCampaignModel.fromJson(campaign)));
+      response.data.forEach((campaign) =>
+          basicCampaignList!.add(BasicCampaignModel.fromJson(campaign)));
     }
     return basicCampaignList;
   }
 
   Future<List<Item>?> _getItemCampaignList() async {
     List<Item>? itemCampaignList;
-    Response response = await apiClient.getData(AppConstants.itemCampaignUri);
+    final response = await apiClient.getData(AppConstants.itemCampaignUri);
     if (response.statusCode == 200) {
       itemCampaignList = [];
-      response.body.forEach((camp) => itemCampaignList!.add(Item.fromJson(camp)));
+      response.data
+          .forEach((camp) => itemCampaignList!.add(Item.fromJson(camp)));
     }
     return itemCampaignList;
   }
@@ -41,9 +46,10 @@ class CampaignRepository implements CampaignRepositoryInterface {
   @override
   Future<BasicCampaignModel?> get(String? id) async {
     BasicCampaignModel? basicCampaign;
-    Response response = await apiClient.getData('${AppConstants.basicCampaignDetailsUri}$id');
+    final response =
+        await apiClient.getData('${AppConstants.basicCampaignDetailsUri}$id');
     if (response.statusCode == 200) {
-      basicCampaign = BasicCampaignModel.fromJson(response.body);
+      basicCampaign = BasicCampaignModel.fromJson(response.data);
     }
     return basicCampaign;
   }
@@ -62,5 +68,4 @@ class CampaignRepository implements CampaignRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

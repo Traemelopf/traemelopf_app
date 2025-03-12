@@ -1,4 +1,5 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:sixam_mart/features/category/domain/models/category_model.dart';
 import 'package:sixam_mart/features/item/domain/models/item_model.dart';
 import 'package:sixam_mart/features/store/domain/models/store_model.dart';
@@ -12,8 +13,15 @@ class CategoryRepository implements CategoryRepositoryInterface {
   CategoryRepository({required this.apiClient});
 
   @override
-  Future getList({int? offset, bool categoryList = false, bool subCategoryList = false, bool categoryItemList = false, bool categoryStoreList = false,
-    bool? allCategory, String? id, String? type}) async {
+  Future getList(
+      {int? offset,
+      bool categoryList = false,
+      bool subCategoryList = false,
+      bool categoryItemList = false,
+      bool categoryStoreList = false,
+      bool? allCategory,
+      String? id,
+      String? type}) async {
     if (categoryList) {
       return await _getCategoryList(allCategory!);
     } else if (subCategoryList) {
@@ -27,12 +35,17 @@ class CategoryRepository implements CategoryRepositoryInterface {
 
   Future<List<CategoryModel>?> _getCategoryList(bool allCategory) async {
     List<CategoryModel>? categoryList;
-    Response response = await apiClient.getData(AppConstants.categoryUri, headers: allCategory ? {
-      'Content-Type': 'application/json; charset=UTF-8',
-      AppConstants.localizationKey: Get.find<LocalizationController>().locale.languageCode} : null);
+    final response = await apiClient.getData(AppConstants.categoryUri,
+        headers: allCategory
+            ? {
+                'Content-Type': 'application/json; charset=UTF-8',
+                AppConstants.localizationKey:
+                    Get.find<LocalizationController>().locale.languageCode
+              }
+            : null);
     if (response.statusCode == 200) {
       categoryList = [];
-      response.body.forEach((category) {
+      response.data.forEach((category) {
         categoryList!.add(CategoryModel.fromJson(category));
       });
     }
@@ -41,34 +54,41 @@ class CategoryRepository implements CategoryRepositoryInterface {
 
   Future<List<CategoryModel>?> _getSubCategoryList(String? parentID) async {
     List<CategoryModel>? subCategoryList;
-    Response response = await apiClient.getData('${AppConstants.subCategoryUri}$parentID');
+    final response =
+        await apiClient.getData('${AppConstants.subCategoryUri}$parentID');
     if (response.statusCode == 200) {
-      subCategoryList= [];
-      response.body.forEach((category) => subCategoryList!.add(CategoryModel.fromJson(category)));
+      subCategoryList = [];
+      response.data.forEach(
+          (category) => subCategoryList!.add(CategoryModel.fromJson(category)));
     }
     return subCategoryList;
   }
 
-  Future<ItemModel?> _getCategoryItemList(String? categoryID, int offset, String type) async {
+  Future<ItemModel?> _getCategoryItemList(
+      String? categoryID, int offset, String type) async {
     ItemModel? categoryItem;
-    Response response = await apiClient.getData('${AppConstants.categoryItemUri}$categoryID?limit=10&offset=$offset&type=$type');
+    final response = await apiClient.getData(
+        '${AppConstants.categoryItemUri}$categoryID?limit=10&offset=$offset&type=$type');
     if (response.statusCode == 200) {
-      categoryItem = ItemModel.fromJson(response.body);
+      categoryItem = ItemModel.fromJson(response.data);
     }
     return categoryItem;
   }
 
-  Future<StoreModel?> _getCategoryStoreList(String? categoryID, int offset, String type) async {
+  Future<StoreModel?> _getCategoryStoreList(
+      String? categoryID, int offset, String type) async {
     StoreModel? categoryStore;
-    Response response = await apiClient.getData('${AppConstants.categoryStoreUri}$categoryID?limit=10&offset=$offset&type=$type');
+    final response = await apiClient.getData(
+        '${AppConstants.categoryStoreUri}$categoryID?limit=10&offset=$offset&type=$type');
     if (response.statusCode == 200) {
-      categoryStore = StoreModel.fromJson(response.body);
+      categoryStore = StoreModel.fromJson(response.data);
     }
     return categoryStore;
   }
 
   @override
-  Future<Response> getSearchData(String? query, String? categoryID, bool isStore, String type) async {
+  Future<Response> getSearchData(
+      String? query, String? categoryID, bool isStore, String type) async {
     return await apiClient.getData(
       '${AppConstants.searchUri}${isStore ? 'stores' : 'items'}/search?name=$query&category_id=$categoryID&type=$type&offset=1&limit=50',
     );
@@ -76,7 +96,8 @@ class CategoryRepository implements CategoryRepositoryInterface {
 
   @override
   Future<bool> saveUserInterests(List<int?> interests) async {
-    Response response = await apiClient.postData(AppConstants.interestUri, {"interest": interests});
+    final response = await apiClient
+        .postData(AppConstants.interestUri, {"interest": interests});
     return (response.statusCode == 200);
   }
 
@@ -99,5 +120,4 @@ class CategoryRepository implements CategoryRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

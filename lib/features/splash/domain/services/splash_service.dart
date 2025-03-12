@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
 import 'package:sixam_mart/common/models/response_model.dart';
 import 'package:sixam_mart/features/splash/domain/models/landing_model.dart';
 import 'package:sixam_mart/common/models/module_model.dart';
@@ -108,5 +108,4 @@ class SplashService implements SplashServiceInterface {
   Future<void> saveReferBottomSheetStatus(bool data) async {
     return await splashRepositoryInterface.saveReferBottomSheetStatus(data);
   }
-
 }

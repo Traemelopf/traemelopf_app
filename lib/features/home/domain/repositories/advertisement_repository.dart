@@ -11,10 +11,10 @@ class AdvertisementRepository implements AdvertisementRepositoryInterface {
   @override
   Future<List<AdvertisementModel>?> getList({int? offset}) async {
     List<AdvertisementModel>? advertisementList;
-    Response response = await apiClient.getData(AppConstants.advertisementListUri);
-    if(response.statusCode == 200) {
+    final response = await apiClient.getData(AppConstants.advertisementListUri);
+    if (response.statusCode == 200) {
       advertisementList = [];
-      response.body.forEach((data) {
+      response.data.forEach((data) {
         advertisementList?.add(AdvertisementModel.fromJson(data));
       });
     }
@@ -40,5 +40,4 @@ class AdvertisementRepository implements AdvertisementRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

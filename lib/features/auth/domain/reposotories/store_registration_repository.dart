@@ -1,4 +1,4 @@
-import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/auth/domain/models/store_body_model.dart';
@@ -6,28 +6,32 @@ import 'package:sixam_mart/features/auth/domain/reposotories/store_registration_
 import 'package:sixam_mart/features/business/domain/models/package_model.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 
-class StoreRegistrationRepository implements StoreRegistrationRepositoryInterface {
+class StoreRegistrationRepository
+    implements StoreRegistrationRepositoryInterface {
   final ApiClient apiClient;
   StoreRegistrationRepository({required this.apiClient});
 
   @override
-  Future<Response> registerStore(StoreBodyModel store, XFile? logo, XFile? cover) async {
-    Response response = await apiClient.postMultipartData(
-      AppConstants.storeRegisterUri, store.toJson(), [MultipartBody('logo', logo), MultipartBody('cover_photo', cover)],
+  Future<Response> registerStore(
+      StoreBodyModel store, XFile? logo, XFile? cover) async {
+    final response = await apiClient.postMultipartData(
+      AppConstants.storeRegisterUri,
+      store.toJson(),
+      [MultipartBody('logo', logo), MultipartBody('cover_photo', cover)],
     );
     return response;
   }
 
   @override
   Future<bool> checkInZone(String? lat, String? lng, int zoneId) async {
-    Response response = await apiClient.getData('${AppConstants.checkZoneUri}?lat=$lat&lng=$lng&zone_id=$zoneId');
-    if(response.statusCode == 200) {
-      return response.body;
+    final response = await apiClient.getData(
+        '${AppConstants.checkZoneUri}?lat=$lat&lng=$lng&zone_id=$zoneId');
+    if (response.statusCode == 200) {
+      return response.data;
     } else {
-      return response.body;
+      return response.data;
     }
   }
-
 
   @override
   Future add(value) {
@@ -47,9 +51,9 @@ class StoreRegistrationRepository implements StoreRegistrationRepositoryInterfac
   @override
   Future<PackageModel?> getList({int? offset}) async {
     PackageModel? packageModel;
-    Response response = await apiClient.getData(AppConstants.storePackagesUri);
-    if(response.statusCode == 200) {
-      packageModel = PackageModel.fromJson(response.body);
+    final response = await apiClient.getData(AppConstants.storePackagesUri);
+    if (response.statusCode == 200) {
+      packageModel = PackageModel.fromJson(response.data);
     }
     return packageModel;
   }
@@ -58,5 +62,4 @@ class StoreRegistrationRepository implements StoreRegistrationRepositoryInterfac
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

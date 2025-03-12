@@ -12,9 +12,9 @@ class FlashSaleRepository implements FlashSaleRepositoryInterface {
   @override
   Future<FlashSaleModel?> getFlashSale() async {
     FlashSaleModel? flashSaleModel;
-    Response response = await apiClient.getData(AppConstants.flashSaleUri);
-    if(response.statusCode == 200) {
-      flashSaleModel = FlashSaleModel.fromJson(response.body);
+    final response = await apiClient.getData(AppConstants.flashSaleUri);
+    if (response.statusCode == 200) {
+      flashSaleModel = FlashSaleModel.fromJson(response.data);
     }
     return flashSaleModel;
   }
@@ -22,9 +22,10 @@ class FlashSaleRepository implements FlashSaleRepositoryInterface {
   @override
   Future<ProductFlashSale?> getFlashSaleWithId(int id, int offset) async {
     ProductFlashSale? productFlashSale;
-    Response response = await apiClient.getData('${AppConstants.flashSaleProductsUri}?flash_sale_id=$id&offset=$offset&limit=10');
-    if(response.statusCode == 200) {
-      productFlashSale = ProductFlashSale.fromJson(response.body);
+    final response = await apiClient.getData(
+        '${AppConstants.flashSaleProductsUri}?flash_sale_id=$id&offset=$offset&limit=10');
+    if (response.statusCode == 200) {
+      productFlashSale = ProductFlashSale.fromJson(response.data);
     }
     return productFlashSale;
   }
@@ -53,5 +54,4 @@ class FlashSaleRepository implements FlashSaleRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

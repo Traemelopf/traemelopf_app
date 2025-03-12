@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:get/get_connect/connect.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/payment/domain/models/offline_method_model.dart';
@@ -34,30 +34,31 @@ class PaymentRepository implements PaymentRepositoryInterface {
 
   Future<List<OfflineMethodModel>?> _getOfflineMethodList() async {
     List<OfflineMethodModel>? offlineMethodList;
-    Response response = await apiClient.getData(AppConstants.offlineMethodListUri);
+    final response = await apiClient.getData(AppConstants.offlineMethodListUri);
     if (response.statusCode == 200) {
       offlineMethodList = [];
-      response.body.forEach((method) => offlineMethodList!.add(OfflineMethodModel.fromJson(method)));
+      response.data.forEach((method) =>
+          offlineMethodList!.add(OfflineMethodModel.fromJson(method)));
     }
     return offlineMethodList;
   }
 
   @override
   Future<bool> saveOfflineInfo(String data) async {
-    Response response = await apiClient.postData(AppConstants.offlinePaymentSaveInfoUri, jsonDecode(data));
+    final response = await apiClient.postData(
+        AppConstants.offlinePaymentSaveInfoUri, jsonDecode(data));
     return (response.statusCode == 200);
   }
 
   @override
   Future<bool> updateOfflineInfo(String data) async {
-    Response response = await apiClient.postData(AppConstants.offlinePaymentUpdateInfoUri, jsonDecode(data));
+    final response = await apiClient.postData(
+        AppConstants.offlinePaymentUpdateInfoUri, jsonDecode(data));
     return (response.statusCode == 200);
   }
-
 
   @override
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }

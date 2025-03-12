@@ -1,4 +1,4 @@
-import 'package:get/get_connect.dart';
+import 'package:dio/dio.dart';
 import 'package:sixam_mart/common/models/transaction_model.dart';
 import 'package:sixam_mart/api/api_client.dart';
 import 'package:sixam_mart/features/loyalty/domain/repositories/loyalty_repository_interface.dart';
@@ -10,7 +10,8 @@ class LoyaltyRepository implements LoyaltyRepositoryInterface {
 
   @override
   Future<Response> pointToWallet({int? point}) async {
-    return await apiClient.postData(AppConstants.loyaltyPointTransferUri, {"point": point});
+    return await apiClient
+        .postData(AppConstants.loyaltyPointTransferUri, {"point": point});
   }
 
   @override
@@ -35,9 +36,10 @@ class LoyaltyRepository implements LoyaltyRepositoryInterface {
 
   Future<TransactionModel?> _getLoyaltyTransactionList(int? offset) async {
     TransactionModel? transactionModel;
-    Response response = await apiClient.getData('${AppConstants.loyaltyTransactionUri}?offset=$offset&limit=10');
+    final response = await apiClient.getData(
+        '${AppConstants.loyaltyTransactionUri}?offset=$offset&limit=10');
     if (response.statusCode == 200) {
-      transactionModel = TransactionModel.fromJson(response.body);
+      transactionModel = TransactionModel.fromJson(response.data);
     }
     return transactionModel;
   }
@@ -46,5 +48,4 @@ class LoyaltyRepository implements LoyaltyRepositoryInterface {
   Future update(Map<String, dynamic> body, int? id) {
     throw UnimplementedError();
   }
-
 }
