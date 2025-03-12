@@ -5,7 +5,7 @@ ThemeData light({Color color = const Color.fromRGBO(230, 39, 25, 1)}) =>
     ThemeData(
       fontFamily: AppConstants.fontFamily,
       primaryColor: color,
-      secondaryHeaderColor: const Color(0xFF1ED7AA),
+      secondaryHeaderColor: const Color.fromARGB(255, 215, 30, 30),
       disabledColor: const Color(0xFFBABFC4),
       brightness: Brightness.light,
       hintColor: const Color(0xFF9F9F9F),

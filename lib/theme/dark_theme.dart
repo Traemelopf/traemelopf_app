@@ -16,7 +16,7 @@ ThemeData dark({Color color = const Color.fromRGBO(230, 39, 25, 1)}) =>
           style: TextButton.styleFrom(foregroundColor: color)),
       colorScheme: ColorScheme.dark(primary: color, secondary: color)
           .copyWith(surface: const Color(0xFF191A26))
-          .copyWith(error: const Color(0xFFdd3135)),
+          .copyWith(error: const Color(0xFFE84D4F)),
       popupMenuTheme: const PopupMenuThemeData(
           color: Color(0xFF29292D), surfaceTintColor: Color(0xFF29292D)),
       dialogTheme: const DialogTheme(surfaceTintColor: Colors.white10),
