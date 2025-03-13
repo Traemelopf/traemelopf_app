@@ -177,7 +177,8 @@ class _CodePickerWidgetState extends State<CodePickerWidget> {
               child: SelectionDialog(
                 hideHeaderText: true,
                 headerAlignment: MainAxisAlignment.center,
-                headerTextStyle: widget.dialogTextStyle!,
+                headerTextStyle: widget.dialogTextStyle ??
+                    Theme.of(context).textTheme.headlineMedium!,
                 topBarPadding: const EdgeInsets.all(0),
                 elements!,
                 favoriteElements!,
@@ -218,7 +219,8 @@ class _CodePickerWidgetState extends State<CodePickerWidget> {
           child: SelectionDialog(
             hideHeaderText: true,
             headerAlignment: MainAxisAlignment.center,
-            headerTextStyle: widget.dialogTextStyle!,
+            headerTextStyle: widget.dialogTextStyle ??
+                Theme.of(context).textTheme.headlineMedium!,
             topBarPadding: const EdgeInsets.all(0),
             elements!,
             favoriteElements!,
