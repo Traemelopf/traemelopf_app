@@ -82,6 +82,7 @@ flutter:
     - assets/language/
     - assets/map/
     - assets/splash.png
+    - assets/splash-night.png
 
   fonts:
     - family: Roboto

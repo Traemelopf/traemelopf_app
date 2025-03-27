@@ -37,26 +37,30 @@ class LocationSearchDialogWidget extends StatelessWidget {
                 ? 600
                 : Dimensions.webMaxWidth,
             child: TypeAheadField(
-              onSelected: (value) => controller.text = value.description!,
               controller: controller,
-              // textInputAction: TextInputAction.search,
-              // autofocus: true,
-              // textCapitalization: TextCapitalization.words,
-              // keyboardType: TextInputType.streetAddress,
-              // decoration: InputDecoration(
-              //   hintText: 'search_location'.tr,
-              //   border: OutlineInputBorder(
-              //     borderRadius: BorderRadius.circular(10),
-              //     borderSide: const BorderSide(style: BorderStyle.none, width: 0),
-              //   ),
-              //   hintStyle: Theme.of(context).textTheme.displayMedium!.copyWith(
-              //     fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor,
-              //   ),
-              //   filled: true, fillColor: Theme.of(context).cardColor,
-              // ),
-              // style: Theme.of(context).textTheme.displayMedium!.copyWith(
-              //   color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge,
-              // ),
+              builder: (context, controller, focusNode) => TextField(
+                controller: controller,
+                focusNode: focusNode,
+                decoration: InputDecoration(
+                  hintText: 'search_location'.tr,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(style: BorderStyle.none, width: 0),
+                  ),
+                  hintStyle:
+                      Theme.of(context).textTheme.displayMedium!.copyWith(
+                            fontSize: Dimensions.fontSizeDefault,
+                            color: Theme.of(context).disabledColor,
+                          ),
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
+                ),
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      fontSize: Dimensions.fontSizeLarge,
+                    ),
+              ),
               suggestionsCallback: (pattern) async {
                 return await Get.find<LocationController>()
                     .searchLocation(context, pattern);
@@ -84,14 +88,16 @@ class LocationSearchDialogWidget extends StatelessWidget {
                   ]),
                 );
               },
-              // onSuggestionSelected: (PredictionModel suggestion) {
-              //   if(isPickedUp == null) {
-              //     Get.find<LocationController>().setLocation(suggestion.placeId, suggestion.description, mapController);
-              //   }else {
-              //     Get.find<ParcelController>().setLocationFromPlace(suggestion.placeId, suggestion.description, isPickedUp);
-              //   }
-              //   Get.back();
-              // },
+              onSelected: (PredictionModel suggestion) {
+                if (isPickedUp == null) {
+                  Get.find<LocationController>().setLocation(suggestion.placeId,
+                      suggestion.description, mapController);
+                } else {
+                  Get.find<ParcelController>().setLocationFromPlace(
+                      suggestion.placeId, suggestion.description, isPickedUp);
+                }
+                Get.back();
+              },
             )),
       ),
     );

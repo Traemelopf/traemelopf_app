@@ -184,13 +184,12 @@ class SplashScreenState extends State<SplashScreen> {
         AddressHelper.getUserAddressFromSharedPref()!.zoneIds == null) {
       Get.find<AuthController>().clearSharedAddress();
     }
+    final brightness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
       key: _globalKey,
       backgroundColor:
-          MediaQuery.of(context).platformBrightness == Brightness.dark
-              ? Colors.black
-              : Colors.white,
+          brightness == Brightness.dark ? Colors.black : Colors.white,
       body: GetBuilder<SplashController>(builder: (splashController) {
         return Center(
           child: splashController.hasConnection
@@ -198,7 +197,9 @@ class SplashScreenState extends State<SplashScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/splash.png',
+                      brightness == Brightness.light
+                          ? 'assets/splash.png'
+                          : 'assets/splash-night.png',
                       width: 200,
                     ),
                     const SizedBox(height: Dimensions.paddingSizeSmall),
