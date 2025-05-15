@@ -75,8 +75,12 @@ class _FooterViewState extends State<FooterView> {
                                 children: [
                                   const SizedBox(
                                       height: Dimensions.paddingSizeExtraLarge),
-                                  Image.asset(Images.logo,
-                                      width: 126, height: 40),
+                                  Image.asset(
+                                      Get.isDarkMode
+                                          ? 'assets/splash-night.png'
+                                          : 'assets/splash.png',
+                                      width: 126,
+                                      height: 40),
                                   const SizedBox(
                                       height: Dimensions.paddingSizeSmall),
                                   Text(

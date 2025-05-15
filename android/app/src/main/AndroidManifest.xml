@@ -25,7 +25,7 @@
     </queries>
 
     <application
-        android:label="Traemelopf"
+        android:label="Tráemelo"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
